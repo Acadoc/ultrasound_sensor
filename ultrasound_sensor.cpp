@@ -1,4 +1,4 @@
-/* ultrasound_sensor.cpp version 1.00 */
+/* ultrasound_sensor.cpp version 1.01 */
 
 #include "ultrasound_sensor.h"
 
@@ -6,6 +6,7 @@
 volatile unsigned long start_time, stop_time;
 volatile unsigned short *CurrEchoPin = NULL;
 volatile boolean mesure_started, mesure_ended;
+volatile boolean pasif, paselse;
 
 /****************************************************************************/
 
@@ -16,6 +17,7 @@ volatile boolean mesure_started, mesure_ended;
 void ultrasound_sensor_init(unsigned short ISR_PIN)
 {
 	//interrupts();
+	pinMode(ISR_PIN,INPUT);
 	attachInterrupt(ISR_PIN, echo_ISR, CHANGE);
 	//delay(1000);
 	start_time = 0 ;
@@ -59,7 +61,12 @@ unsigned int ultrasound_sensor::Get_Distance()
 			DEBUG_PRINT(start_time);
 			DEBUG_PRINT(", stop time : ");
 			DEBUG_PRINT(stop_time);
-			DEBUG_PRINT("\n");
+			DEBUG_PRINT("\t mesure_started : ");
+			DEBUG_PRINT(mesure_started);
+			DEBUG_PRINT(", mesure_ended time : ");
+			DEBUG_PRINT(mesure_ended);
+			DEBUG_PRINT(", EchoPin : ");
+			DEBUG_PRINT(digitalRead((short)(*CurrEchoPin)));
 		}
 
 		mesured_value = (stop_time - start_time) * 17 / 100;
@@ -133,11 +140,13 @@ void echo_ISR()
 	if(digitalRead((short)(*CurrEchoPin)) == HIGH)
 	{
 		start_time = micros();
+		 pasif = TRUE;
 	}
 	else
 	{
 		stop_time = micros();
 		mesure_ended = TRUE;
+		paselse=TRUE;
 	}
 
 }
