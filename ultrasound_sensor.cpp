@@ -1,10 +1,10 @@
-/* ultrasound_sensor.cpp version 1.01 */
+/* ultrasound_sensor.cpp version 1.02 */
 
 #include "ultrasound_sensor.h"
 
 /****************************** variables ************************************/
 volatile unsigned long start_time, stop_time;
-volatile unsigned short *CurrEchoPin = NULL;
+volatile unsigned short *CurrEchoPin = nullptr;
 volatile boolean mesure_started, mesure_ended;
 volatile boolean pasif, paselse;
 
@@ -17,11 +17,20 @@ volatile boolean pasif, paselse;
 void ultrasound_sensor_init(unsigned short ISR_PIN)
 {
 	//interrupts();
-	pinMode(ISR_PIN,INPUT);
+	DEBUG_PRINT("test1\n");
+	delay(3000);
+	pinMode(ISR_PIN, INPUT_PULLUP);
+	DEBUG_PRINT("test2\n");
+	delay(3000);
+	*CurrEchoPin = 0;
 	attachInterrupt(ISR_PIN, echo_ISR, CHANGE);
+	DEBUG_PRINT("test3\n");
+	delay(3000);
 	//delay(1000);
 	start_time = 0 ;
 	stop_time = 0 ;
+	DEBUG_PRINT("test4\n");
+	delay(3000);
 	mesure_started = FALSE;
 	mesure_ended = TRUE;
 	DEBUG_PRINT("ultrasound_sensor init done.\n");
@@ -102,6 +111,7 @@ void ultrasound_sensor::Set_TrigPin(unsigned short pin)
 	{
 		pinMode(pin,OUTPUT);
 		m_TrigPin = pin;
+		//pinMode(m_TrigPin,OUTPUT);
 		digitalWrite(m_TrigPin,LOW);
 		DEBUG_PRINT("TrigPin set up.\n");
 	}
@@ -117,8 +127,9 @@ void ultrasound_sensor::Set_EchoPin(unsigned short pin)
 {
 	if ((pin >= 0) && (pin <= NB_DIO))
 	{
-		pinMode(pin,INPUT);
+		pinMode(pin,INPUT_PULLUP);
 		m_EchoPin = pin;
+		//pinMode(m_EchoPin,INPUT);
 		DEBUG_PRINT("EchoPin set up.\n");
 	}
 	else
@@ -137,7 +148,11 @@ void ultrasound_sensor::Set_EchoPin(unsigned short pin)
 void echo_ISR()
 {
 // don't forget to set any used variable as volatile !
-	if(digitalRead((short)(*CurrEchoPin)) == HIGH)
+	if(CurrEchoPin == nullptr)
+	{
+		// do nothing
+	}
+	else if(digitalRead((short)(*CurrEchoPin)) == HIGH)
 	{
 		start_time = micros();
 		 pasif = TRUE;

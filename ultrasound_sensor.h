@@ -1,4 +1,4 @@
-/* ultrasound_sensor.h version 1.01 */
+/* ultrasound_sensor.h version 1.02 */
 
 #ifndef ultrasound_sensor_h
 	#define ultrasound_sensor_h
