@@ -1,4 +1,4 @@
-/* ultrasound_sensor.h version 1.00 */
+/* ultrasound_sensor.h version 1.02 */
 
 #ifndef ultrasound_sensor_h
 	#define ultrasound_sensor_h
@@ -40,6 +40,7 @@
 		void Set_TrigPin(unsigned short pin);
 		void Set_EchoPin(unsigned short pin);
 	};
+
 	#ifndef INT1
 		/* patch for arduino DUE compatibility */
 		#define INT1 3

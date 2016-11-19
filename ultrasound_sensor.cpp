@@ -1,4 +1,4 @@
-/* ultrasound_sensor.cpp version 1.00 */
+/* ultrasound_sensor.cpp version 1.02 */
 
 #include "ultrasound_sensor.h"
 
@@ -70,7 +70,12 @@ unsigned int ultrasound_sensor::Get_Distance()
 			DEBUG_PRINT(start_time);
 			DEBUG_PRINT(", stop time : ");
 			DEBUG_PRINT(stop_time);
-			DEBUG_PRINT("\n");
+			DEBUG_PRINT("\t mesure_started : ");
+			DEBUG_PRINT(mesure_started);
+			DEBUG_PRINT(", mesure_ended time : ");
+			DEBUG_PRINT(mesure_ended);
+			DEBUG_PRINT(", EchoPin : ");
+			DEBUG_PRINT(digitalRead((short)(*CurrEchoPin)));
 		}
 
 		mesured_value = (stop_time - start_time) * 17 / 100;
@@ -106,6 +111,7 @@ void ultrasound_sensor::Set_TrigPin(unsigned short pin)
 	{
 		pinMode(pin,OUTPUT);
 		m_TrigPin = pin;
+		//pinMode(m_TrigPin,OUTPUT);
 		digitalWrite(m_TrigPin,LOW);
 		DEBUG_PRINT("TrigPin set up.\n");
 	}
@@ -123,6 +129,7 @@ void ultrasound_sensor::Set_EchoPin(unsigned short pin)
 	{
 		pinMode(pin,INPUT_PULLUP);
 		m_EchoPin = pin;
+		//pinMode(m_EchoPin,INPUT);
 		DEBUG_PRINT("EchoPin set up.\n");
 	}
 	else
